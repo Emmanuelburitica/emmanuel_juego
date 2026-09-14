@@ -1,0 +1,28 @@
+* {
+    margin: 20;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+
+}
+
+body{
+    background: #020024;
+background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+touch-action: none;
+
+}
+
+
+.game_wrapper{
+    background: rgb(22, 139, 207);
+    padding: 1rem 1rem 1.4rem;
+    border-radius: 13px;
+    box-shadow: 10px 10px ;
+    border: 2px solid blue;
+}
