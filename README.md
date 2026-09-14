@@ -1,0 +1,96 @@
+* {
+    margin: 20;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+
+}
+
+body{
+    background: #020024;
+background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+touch-action: none;
+
+}
+
+
+.game_wrapper{
+    background: rgb(22, 139, 207);
+    padding: 1rem 1rem 1.4rem;
+    border-radius: 13px;
+    box-shadow: 10px 10px ;
+    border: 2px solid blue;
+}
+
+canvas{
+    display:block;
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 400/500;
+    background:#09a9d1;
+    border-radius: 1.2rem;
+    margin: 0%;
+    box-shadow: inset 0 0 50px #fafafa;
+    touch-action:none;
+    cursor:pointer;
+}
+
+.info{
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    margin:4px 6px 4px 6px;
+    font-weight:bold;
+    font-family:"times new roman" , times, serif;
+    font-size: 1.5rem;
+    text-shadow: 0 0 7px;
+    letter-spacing: 2px;
+}
+
+.score{
+    color: bisque;
+    font-size: 1.8rem;
+    margin-left: 6px;
+}
+
+button{
+    background: #acc4f0;
+    border-radius: 6px;
+    color: brown;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 8px 20px;
+    border-radius: none;
+    box-shadow: 0 5px 0, black;
+    transition:all;
+    letter-spacing:1px ;
+    touch-action: manipulation;
+    border: 1px solid salmon;
+}
+
+button:active{
+    transform: translate(3px);
+    box-shadow: 0 3px 0;
+}
+
+.controls-note{
+    color:lightseagreen;
+    font-size: small;
+    margin: 6px 4px 5px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width:500px){
+    .game_wrapper{padding: 0.5rem; }
+    .info{font-size: 1rem;}
+    .score-span{font-size: 1.5rem;}
+    button{font-size: 1rem;padding :6px 10px}
+
+}
