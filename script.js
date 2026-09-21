@@ -88,4 +88,19 @@ function shootBullet(){
         speed: 5
     })
 }
+//colisiones//
+
 }
+
+//eventos//
+window.addEventListener("keydown", handleKeyDown)
+window.addEventListener("keyup", handleKeyup)
+canvas.addEventListener("touchstart", handleTouchStart, { pasive: false})
+canvas.addEventListener("touchmove", handleTouchStart, { pasive: false})
+canvas.addEventListener("touchend", handleTouchStart, { pasive: false})
+canvas.addEventListener("touchmenú", (e) => e.preventDefault())
+document.getElementById("resetBtn").addEventListener("click", resetGame)
+
+//inicio del juego, allí llamamos a la funciones que nececitemos//
+initEnemies()
+updateScore()
