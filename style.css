@@ -30,12 +30,12 @@ touch-action: none;
 canvas{
     display:block;
     width: 100%;
-    max-width: 480px;
-    aspect-ratio: 400/500;
+    max-width: 750px;
+    aspect-ratio: 480/500;
     background:#09a9d1;
     border-radius: 1.2rem;
     margin: 0%;
-    box-shadow: inset 0 0 60px #fafafa;
+    box-shadow: inset 0 0 70px #fafafa;
     touch-action:none;
     cursor:pointer;
 }
