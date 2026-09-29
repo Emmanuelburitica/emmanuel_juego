@@ -1,10 +1,11 @@
 // ---- CONFIGURACIÓN RETRO ----
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const scoreSpan = document.getElementById('scoreDisplay');
+const scoreSpan = document.getElementById('scoreDisplay'); // Corregido: ID coincide con HTML
 
 const CW = 400, CH = 500;
-canvas.width = CW; canvas.height = CH;
+canvas.width = CW; 
+canvas.height = CH;
 
 // ---- ESTADO DEL JUEGO ----
 let player = { x: 180, y: 450, w: 30, h: 16 };
@@ -29,7 +30,7 @@ let enemyMoveCounter = 0;
 const ENEMY_MOVE_FRAMES = 12;
 
 let shootCooldown = 0;
-const SHOOT_DELAY = 14;
+const SHOOT_DELAY = 30;
 
 // ---- INICIALIZAR ENEMIGOS ----
 function initEnemies() {
@@ -72,17 +73,19 @@ function resetGame() {
 function shootBullet() {
     if (gameOver || winFlag) return;
     bullets.push({
-        x: player.x + player.w/2 - 3,
+        x: player.x + player.w / 2 - 3,
         y: player.y - 8,
         w: 6,
         h: 14,
-        speed: 5
+        speed: 4
     });
 }
 
 // ---- ACTUALIZAR PUNTUACIÓN ----
 function updateScore() {
-    scoreSpan.textContent = score;
+    if (scoreSpan) {
+        scoreSpan.textContent = score;
+    }
 }
 
 // ---- COLISIONES ----
@@ -177,14 +180,21 @@ function update() {
     // Colisiones enemigos vs jugador
     for (const e of enemies) {
         if (!e.alive) continue;
-        if (rectCollide(player, e)) {
+        if (rectCollide(player, e) || e.y + e.h > player.y + 10) {
             gameOver = true;
             return;
         }
-        if (e.y + e.h > player.y + 10) {
-            gameOver = true;
-            return;
-        }
+    }
+}
+
+// Helper seguro para bordes redondeados
+function drawRoundedRect(x, y, w, h, r) {
+    if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, r);
+        ctx.fill();
+    } else {
+        ctx.fillRect(x, y, w, h);
     }
 }
 
@@ -197,9 +207,9 @@ function draw() {
     ctx.fillRect(0, 0, CW, CH);
     for (let i = 0; i < 70; i++) {
         if (i % 2 === 0) continue;
-        ctx.fillStyle = `rgba(255,255,240,${0.5+Math.random()*0.5})`;
+        ctx.fillStyle = `rgba(255,255,240,${0.5 + Math.random() * 0.5})`;
         ctx.beginPath();
-        ctx.arc((i*23)%CW, (i*13)%CH, 1.2, 0, Math.PI*2);
+        ctx.arc((i * 23) % CW, (i * 13) % CH, 1.2, 0, Math.PI * 2);
         ctx.fill();
     }
 
@@ -207,16 +217,14 @@ function draw() {
     ctx.shadowColor = '#7bb3ff';
     ctx.shadowBlur = 18;
     ctx.fillStyle = '#b1dcff';
-    ctx.beginPath();
-    ctx.roundRect(player.x, player.y, player.w, player.h, 6);
-    ctx.fill();
+    drawRoundedRect(player.x, player.y, player.w, player.h, 6);
+    
     ctx.fillStyle = '#76b8ff';
-    ctx.beginPath();
-    ctx.roundRect(player.x+8, player.y-6, 14, 8, 4);
-    ctx.fill();
+    drawRoundedRect(player.x + 8, player.y - 6, 14, 8, 4);
+
     ctx.fillStyle = '#5f9eff';
-    ctx.fillRect(player.x-4, player.y+4, 4, 8);
-    ctx.fillRect(player.x+player.w, player.y+4, 4, 8);
+    ctx.fillRect(player.x - 4, player.y + 4, 4, 8);
+    ctx.fillRect(player.x + player.w, player.y + 4, 4, 8);
     ctx.shadowBlur = 0;
 
     // Balas
@@ -234,16 +242,15 @@ function draw() {
         ctx.fillStyle = e.color;
         ctx.shadowColor = '#b0d0ff';
         ctx.shadowBlur = 12;
-        ctx.beginPath();
-        ctx.roundRect(e.x, e.y, e.w, e.h, 6);
-        ctx.fill();
+        drawRoundedRect(e.x, e.y, e.w, e.h, 6);
+
         ctx.fillStyle = '#fcf9ea';
         ctx.shadowBlur = 4;
-        ctx.fillRect(e.x+4, e.y+3, 6, 6);
-        ctx.fillRect(e.x+e.w-10, e.y+3, 6, 6);
+        ctx.fillRect(e.x + 4, e.y + 3, 6, 6);
+        ctx.fillRect(e.x + e.w - 10, e.y + 3, 6, 6);
         ctx.fillStyle = '#121212';
-        ctx.fillRect(e.x+6, e.y+5, 3, 3);
-        ctx.fillRect(e.x+e.w-8, e.y+5, 3, 3);
+        ctx.fillRect(e.x + 6, e.y + 5, 3, 3);
+        ctx.fillRect(e.x + e.w - 8, e.y + 5, 3, 3);
     }
     ctx.shadowBlur = 0;
 
@@ -255,37 +262,20 @@ function draw() {
         ctx.fillStyle = '#ffb0a0';
         ctx.shadowColor = '#ff4f4f';
         ctx.shadowBlur = 24;
-        ctx.fillText('💀 GAME OVER', CW/2, CH/2 - 20);
+        ctx.fillText('💀 GAME OVER', CW / 2, CH / 2 - 20);
         ctx.shadowBlur = 0;
     } else if (winFlag) {
         ctx.fillStyle = '#f5e56b';
         ctx.shadowColor = '#ffd966';
         ctx.shadowBlur = 30;
-        ctx.fillText('✨ ¡VICTORIA! ✨', CW/2, CH/2 - 20);
+        ctx.fillText('✨ ¡VICTORIA! ✨', CW / 2, CH / 2 - 20);
         ctx.shadowBlur = 0;
     }
 
     ctx.font = '12px monospace';
     ctx.fillStyle = '#617e9e';
-    ctx.fillText('←  →', CW-60, CH-16);
+    ctx.fillText('←  →', CW - 60, CH - 16);
 }
-
-// Helper para rectángulos redondeados
-CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
-    if (r > w/2) r = w/2;
-    if (r > h/2) r = h/2;
-    this.moveTo(x + r, y);
-    this.lineTo(x + w - r, y);
-    this.quadraticCurveTo(x + w, y, x + w, y + r);
-    this.lineTo(x + w, y + h - r);
-    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    this.lineTo(x + r, y + h);
-    this.quadraticCurveTo(x, y + h, x, y + h - r);
-    this.lineTo(x, y + r);
-    this.quadraticCurveTo(x, y, x + r, y);
-    this.closePath();
-    return this;
-};
 
 // ---- LOOP PRINCIPAL ----
 function gameLoop() {
@@ -312,25 +302,29 @@ function handleKeyUp(e) {
     const key = e.key;
     if (key === 'ArrowLeft' || key === 'Left') {
         leftPressed = false;
-        if (rightPressed) moveX = 1;
-        else moveX = 0;
+        moveX = rightPressed ? 1 : 0;
         e.preventDefault();
     } else if (key === 'ArrowRight' || key === 'Right') {
         rightPressed = false;
-        if (leftPressed) moveX = -1;
-        else moveX = 0;
+        moveX = leftPressed ? -1 : 0;
         e.preventDefault();
     }
 }
 
 // ---- CONTROLES MÓVIL ----
-function handleTouchStart(e) {
-    e.preventDefault();
+function getCanvasTouchX(e) {
     const rect = canvas.getBoundingClientRect();
     const touch = e.touches[0];
-    if (!touch) return;
-    const canvasX = (touch.clientX - rect.left) * (CW / rect.width);
-    if (canvasX < player.x + player.w/2) {
+    if (!touch) return null;
+    return (touch.clientX - rect.left) * (CW / rect.width);
+}
+
+function handleTouchStart(e) {
+    e.preventDefault();
+    const canvasX = getCanvasTouchX(e);
+    if (canvasX === null) return;
+
+    if (canvasX < player.x + player.w / 2) {
         moveX = -1;
         leftPressed = true;
         rightPressed = false;
@@ -343,11 +337,10 @@ function handleTouchStart(e) {
 
 function handleTouchMove(e) {
     e.preventDefault();
-    const rect = canvas.getBoundingClientRect();
-    const touch = e.touches[0];
-    if (!touch) return;
-    const canvasX = (touch.clientX - rect.left) * (CW / rect.width);
-    if (canvasX < player.x + player.w/2) {
+    const canvasX = getCanvasTouchX(e);
+    if (canvasX === null) return;
+
+    if (canvasX < player.x + player.w / 2) {
         moveX = -1;
         leftPressed = true;
         rightPressed = false;
@@ -372,7 +365,12 @@ canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
 canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
 canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
-document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+// Listener del botón de reinicio asignado de forma segura
+const resetBtn = document.getElementById('resetBtn');
+if (resetBtn) {
+    resetBtn.addEventListener('click', resetGame);
+}
 
 // ---- INICIO ----
 initEnemies();
